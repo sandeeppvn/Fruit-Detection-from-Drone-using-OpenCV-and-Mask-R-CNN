@@ -120,6 +120,7 @@ def find_stalk(image):
 	pass
 
 def camshift(window):
+	(x,y,w,h) = window
 	track_window = (x,y,w,h)
 	# set up the ROI for tracking
 	roi = frame[x:x+h, y:y+w]
@@ -221,29 +222,65 @@ def get_fruit(image,variance):
 
 	return contour_image,window,[no_of_contours,poly_approx_len,area]
 
-def track_fruit(fruit_image,fruit_window,params):
+def get_distance_to_camera(image,knownWidth, perWidth):
+	#Obtain focalLength from training or direct specs
+	focalLength = 1
+	# compute and return the distance from the maker to the camera
+	distance = (knownWidth * focalLength) / perWidth
+	cv2.putText(image, "%.2fcm"%(cm),(image.shape[1] - 200, image.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX,2.0, (0, 255, 0), 3)
+	return image,distance
 
+def get_width():
+
+	apple = 7.5
+
+	return apple
+
+def get_adjusted_width(window_width,params):
 	#Use the parameters of the tracked_contour to determine the distance to the fruit
 	no_of_contours,poly_approx_len,area = params
 
-	#Set the threshold parameters, x1 -> Partially close, apply HoughTranforms to detect circles
-
+	#Set the threshold parameters
 	x1_contours_len,x1_len,x1_area = (11111110,11111110,11111110)
 	x2_contours_len,x2_len,x2_area = (11111110,11111110,11111110)
 
-	#Case 1: Medium Distance
 	if((poly_approx_len > x1_len) and (area> x1_area) and (no_of_contours>x1_contours_len)):
+		window_width = window_width
+	else if((poly_approx_len > x2_len) and (area> x2_area) and (no_of_contours>x2_contours_len)):
+		window_width = window_width
+	else:
+		window_width = window_width
+
+	return window_width
+
+def track_fruit(fruit_image,fruit_window,params):
+
+	
+	#Width of fruit
+	fruit_width = get_width()
+
+	#Calculate window width ,window:(x,y,w,h) and adjust window width based on params
+	fruuit_window_width = get_adjusted_window_width(fruit_width[1],params)
+	
+	#Based on number of contours, get the distance to the object by tweaking parameters
+	fruit_image, distance = get_distance_to_camera(fruit_image,fruit_width,fruit_window_width)
+
+
+	#Case 1: Medium Distance
+	if(distance>1):
 		#Get circles using moments or Hough Transforms when image is close and apply mask
 		fruit_image = apply_Hough_Transform(fruit_image)
 
+
 	#Case 2: Close Distance
-	if((poly_approx_len > x2_len) and (area> x2_area) and (no_of_contours>x2_contours_len)):
+	elif(distance>1):
 		#Use canny or sobel edge detection if the fruit is close to the camera
 		bilateral_filtered_image = cv2.bilateralFilter(fruit_image, 5, 175, 175)
 		edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
 
 		#Find the stack using the edge-detected image
 		find_stalk(edge_detected_image)
+
 
 	#Case 3: Far Distance
 	else:

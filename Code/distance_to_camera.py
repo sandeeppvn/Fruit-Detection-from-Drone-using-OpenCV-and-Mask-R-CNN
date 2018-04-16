@@ -39,7 +39,7 @@ KNOWN_DISTANCE = 15.0
 KNOWN_WIDTH = 5
 
 # initialize the list of images that we'll be using
-IMAGE_PATHS = ["images/Distance15.jpg", "images/Distance37.jpg","images/Distance115.jpg"]
+IMAGE_PATHS = ["..\Data\Pics\55.png", "images/Distance37.jpg","images/Distance115.jpg"]
 
 # load the first image that contains an object that is KNOWN TO BE 2 feet
 # from our camera, then find the paper marker in the image, and initialize
@@ -47,7 +47,7 @@ IMAGE_PATHS = ["images/Distance15.jpg", "images/Distance37.jpg","images/Distance
 image = cv2.imread(IMAGE_PATHS[0])
 marker = find_marker(image)
 focalLength = (marker[1][0] * KNOWN_DISTANCE) / KNOWN_WIDTH
-
+print(focalLength)
 # loop over the images
 for imagePath in IMAGE_PATHS:
 	# load the image, find the marker in the image, then compute the
