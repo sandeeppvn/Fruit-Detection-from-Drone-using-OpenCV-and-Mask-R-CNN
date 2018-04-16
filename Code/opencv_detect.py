@@ -109,17 +109,17 @@ def get_ellipse():
 def draw_fruit(image):
 
 	#PRE PROCESSING OF IMAGE
-	image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+	# image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
 	maxsize=max(image.shape)
 	scale=700/maxsize
 	image=cv2.resize(image,None,fx=scale,fy=scale)
 	image_blur=cv2.GaussianBlur(image,(7,7),0)
 	image_blur_hsv=cv2.cvtColor(image_blur,cv2.COLOR_RGB2HSV)
-	cv2.imshow('res', image_blur_hsv)
-	cv2.waitKey(2)
 
 	bilateral_filtered_image = cv2.bilateralFilter(image_blur_hsv, 5, 175, 175)
 	edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
+
+	edge_detected_image = image_blur.copy()
 
 	# kernel = get_ellipse()
 	kernel = np.ones((5,5),np.uint8)
@@ -131,7 +131,7 @@ def draw_fruit(image):
 	mask_cleaned=cv2.morphologyEx(edge_detected_image,cv2.MORPH_OPEN,kernel)
 
 	cv2.imshow('Edge', edge_detected_image)
-	cv2.waitKey(1)
+	cv2.waitKey(0)
 
 	mask = get_mask(image_blur_hsv)
 
@@ -158,9 +158,9 @@ def draw_fruit(image):
 	ret,im_th = cv2.threshold(blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
 	image=cv2.cvtColor(overlay_image,cv2.COLOR_GRAY2BGR)
-	# if(image.shape[0]>0 and image.shape[1]>0):
-	# 	cv2.imshow("img",res)
-	# 	cv2.waitKey(0)
+	if(image.shape[0]>0 and image.shape[1]>0):
+		cv2.imshow("img",res)
+		cv2.waitKey(0)
 	# 	cv2.destroyAllWindows()
 	return image
 
@@ -196,4 +196,3 @@ if __name__ == '__main__':
 	else:
 		img = cv2.imread(img_name)
 		result=draw_fruit(img)
-		res = cv2.resize(result,None,fx=1, fy=1, interpolation = cv2.INTER_CUBIC)
