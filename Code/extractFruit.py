@@ -99,7 +99,8 @@ def get_contours(image):
 		im = image.copy()
 		image=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 		image, contours, hierarchy = cv2.findContours(image,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
-		
+		cv2.drawContours(image, contours, -1, (0,255,0), 3)
+		cv2.imwrite("contours.png",image)
 		contour_list = []
 		for contour in contours:
 			#Approximate the contour using convexHull
