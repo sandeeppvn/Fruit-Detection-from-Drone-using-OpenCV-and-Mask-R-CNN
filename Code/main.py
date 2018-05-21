@@ -18,7 +18,7 @@ if __name__ == '__main__':
 	img_name = sys.argv[1]
 	
 	#If input is a Video
-	if(len(sys.argv)>2):
+	if(len(sys.argv)<=2):
 
 		cap = cv2.VideoCapture(img_name)
 		time.sleep(5)

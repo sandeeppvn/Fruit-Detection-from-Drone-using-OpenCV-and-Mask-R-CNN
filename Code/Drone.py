@@ -27,5 +27,5 @@ def get_direction(window,distance,pivot):
 
 def move_drone(img,direction,msg):
 	cv2.putText(img, "Distance:%.2fcm   Tilt:%.2funits   Height:%.2funits  %s"%(direction[0],direction[1],direction[2],msg),(0, img.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX,0.5, (0, 255, 0), 1)
-	cv2.imwrite("distance.png",img)
+	cv2.imwrite("..\Data\Results\distance.png",img)
 	display(img,"Final Image")

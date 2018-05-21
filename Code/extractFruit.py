@@ -12,9 +12,9 @@ def preprocessing(image):
 	image=cv2.resize(image,None,fx=scale,fy=scale)
 
 	image_blur=cv2.GaussianBlur(image,(7,7),0)
-	cv2.imwrite("img_blur.png",image_blur)
+	cv2.imwrite("..\Data\Results\img_blur.png",image_blur)
 	image_blur_hsv=cv2.cvtColor(image_blur,cv2.COLOR_BGR2HSV)
-	cv2.imwrite("img_blur_hsv.png",image_blur_hsv)
+	cv2.imwrite("..\Data\Results\img_blur_hsv.png",image_blur_hsv)
 
 	return image,image_blur,image_blur_hsv
 
@@ -53,22 +53,22 @@ def get_color_mask(image):
 	# min_all = np.array([0,0,0])
 	# max_all = np.array([180,256,256])
 	# mask = cv2.inRange(image,min_all,max_all)
-	cv2.imwrite("mask.png",mask)
+	cv2.imwrite("..\Data\Results\mask.png",mask)
 	return mask
 
 def apply_morphology(mask):
 	kernel=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 	# kernel = np.ones((3,3),np.uint8)
 	dilation = cv2.dilate(mask,kernel,iterations = 2)
-	cv2.imwrite("dilation1.png",dilation)
+	cv2.imwrite("..\Data\Results\dilation1.png",dilation)
 	erosion = cv2.erode(dilation,kernel,iterations = 3)
-	cv2.imwrite("erosion.png",erosion)
+	cv2.imwrite("..\Data\Results\erosion.png",erosion)
 	dilation = cv2.dilate(erosion,kernel,iterations = 15)
-	cv2.imwrite("dilation2.png",dilation)
+	cv2.imwrite("..\Data\Results\dilation2.png",dilation)
 	mask_closed=cv2.morphologyEx(dilation,cv2.MORPH_CLOSE,kernel)
-	cv2.imwrite("mask_closed.png",mask_closed)
+	cv2.imwrite("..\Data\Results\mask_closed.png",mask_closed)
 	mask_cleaned=cv2.morphologyEx(mask_closed,cv2.MORPH_OPEN,kernel)
-	cv2.imwrite("mask_cleaned.png",mask_cleaned)
+	cv2.imwrite("..\Data\Results\mask_cleaned.png",mask_cleaned)
 	return mask_cleaned
 
 def apply_flood_filling(mask):
@@ -99,8 +99,8 @@ def get_contours(image):
 		im = image.copy()
 		image=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 		image, contours, hierarchy = cv2.findContours(image,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
-		cv2.drawContours(image, contours, -1, (0,255,0), 3)
-		cv2.imwrite("contours.png",image)
+		cv2.drawContours(image, contours, -1, (0,255,0), 10)
+		cv2.imwrite("..\Data\Results\contours.png",image)
 		contour_list = []
 		for contour in contours:
 			#Approximate the contour using convexHull
@@ -143,7 +143,7 @@ def get_fruit(image,variance):
 
 	#Use the color_mask on the image
 	colour_masked_image = cv2.bitwise_and(image,image,mask = color_filled_mask)
-	cv2.imwrite("colour_masked_image.png",colour_masked_image)
+	cv2.imwrite("..\Data\Results\colour_masked_image.png",colour_masked_image)
 
 	#Obtain contours of the colour_masked image and get avg contour area
 	contour_val = get_contours(colour_masked_image)
@@ -167,7 +167,7 @@ def get_window(contour_val):
 	box = cv2.boxPoints(rect)
 	box = np.int0(box)
 	cv2.drawContours(tracked_contour_image,[box],0,(0,0,255),2)
-	cv2.imwrite("window.png",tracked_contour_image)
+	cv2.imwrite("..\Data\Results\window.png",tracked_contour_image)
 	window_width = ( get_distance(box[0],box[1]) + get_distance(box[2],box[3]) )/2.0
 	window_height = ( get_distance(box[0],box[3]) + get_distance(box[1],box[2]) )/2.0
 

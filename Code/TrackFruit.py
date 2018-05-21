@@ -97,7 +97,7 @@ def track_fruit(fruit_contour,fruit_window,cap,pd):
 
 	pivot_y,pivot_x = int(fruit_image.shape[0]/2),int(fruit_image.shape[1]/2)
 	cv2.circle(fruit_image,(pivot_x,pivot_y),5,[255,255,0],-1)
-	cv2.imwrite("pivot_camera.png",fruit_image)
+	cv2.imwrite("..\Data\Results\pivot_camera.png",fruit_image)
 	pd_1,pd_2,pd_3 = pd
 
 	# print(consistency_check(distance,(pd_1,pd_2,pd_3)))
@@ -107,7 +107,7 @@ def track_fruit(fruit_contour,fruit_window,cap,pd):
 		print("Distance:",int(distance))
 		direction  = get_direction(fruit_window,distance,(pivot_y,pivot_x))
 		cv2.circle(fruit_image,(int(direction[-1][0]),int(direction[-1][1])),5,[0,255,0],-1)
-		cv2.imwrite("pivot_image.png",fruit_image)
+		cv2.imwrite("..\Data\Results\pivot_image.png",fruit_image)
 		print("Direction (distance,tilt,height)",direction[:-1])
 
 		#Case 1: Far Distance (Also applicable if no_of_contours is high)

@@ -11,7 +11,7 @@ def get_width():
 def get_distance_to_camera(knownWidth, perWidth):
 
 	#Obtain focalLength from training or direct specs
-	focalLength = 1200
+	focalLength = 1200r
 	# compute and return the distance from the maker to the camera
 	distance = (knownWidth * focalLength) / perWidth
 	return distance
